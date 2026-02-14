@@ -7,8 +7,8 @@ Affiliate network marketplace platform (AWIN/Impact/CJ-style concept) with:
 
 ## Repository Layout
 
-- `Solomine/` iOS app source (rebranded in-app to Affilia)
-- `Solomine.xcodeproj` Xcode project
+- `Affilia/` iOS app source (rebranded in-app to Affilia)
+- `Affilia.xcodeproj` Xcode project
 - `web/` lightweight web MVP (`index.html`, `app.js`, `styles.css`)
 
 ## Core Product Direction
@@ -24,8 +24,8 @@ Affiliate network marketplace platform (AWIN/Impact/CJ-style concept) with:
 ## Quick Start
 
 ### iOS
-1. Open `Solomine.xcodeproj` in Xcode.
-2. Build/run the `Solomine` scheme.
+1. Open `Affilia.xcodeproj` in Xcode.
+2. Build/run the `Affilia` scheme.
 
 ### Web MVP
 1. Open `web/index.html` in your browser.
@@ -53,5 +53,5 @@ BMAD is now installed in this project.
 
 ### Notes
 - Installation command used:
-  - `npx bmad-method install --directory /Users/rob/Desktop/Affilia/Solomine --modules bmm --tools claude-code --yes`
+  - `npx bmad-method install --directory . --modules bmm --tools claude-code --yes`
 - If you want BMAD for other IDEs/tools too, rerun install with additional `--tools` values.

@@ -3,7 +3,7 @@
 # Version: 6.0.0-Beta.8
 # Date: 2026-02-14T20:56:59.082Z
 
-project_name: Solomine
+project_name: Affilia
 user_skill_level: intermediate
 planning_artifacts: "{project-root}/_bmad-output/planning-artifacts"
 implementation_artifacts: "{project-root}/_bmad-output/implementation-artifacts"
