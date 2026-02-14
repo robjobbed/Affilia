@@ -6,27 +6,29 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
-struct SolomineApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+struct AffiliaApp: App {
+    @StateObject private var authManager = AuthenticationManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Group {
+                if authManager.isAuthenticated {
+                    if authManager.currentUser?.role != nil {
+                        // User is authenticated and has selected role
+                        ModernMainView()
+                            .environmentObject(authManager)
+                    } else {
+                        // User is authenticated but needs to select role
+                        RoleSelectionView()
+                    }
+                } else {
+                    // User is not authenticated
+                    LoginView()
+                }
+            }
+            .preferredColorScheme(.dark)
         }
-        .modelContainer(sharedModelContainer)
     }
 }

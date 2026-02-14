@@ -1,0 +1,79 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  role              String?  // "AFFILIATE" or "COMPANY"
+  
+  // X (Twitter) Profile Data
+  xUserId           String   @unique
+  xUsername         String   @unique
+  displayName       String
+  bio               String?
+  profileImageUrl   String?
+  xFollowers        Int      @default(0)
+  xFollowing        Int      @default(0)
+  xVerified         Boolean  @default(false)
+  
+  // Affiliate profile (if role = "AFFILIATE")
+  skills            String[] // Array of skills
+  hourlyRate        Int?
+  availability      String?  // "OPEN_TO_WORK", "BUSY", "NOT_AVAILABLE"
+  portfolioProjects Json?    // Store as JSON
+  projectsCompleted Int      @default(0)
+  averageRating     Float?
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLogin         DateTime @default(now())
+  
+  // Relations
+  tokens            Token[]
+  
+  @@index([xUsername])
+  @@index([xUserId])
+}
+
+model Token {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Encrypted X OAuth tokens
+  xAccessToken    String   // Encrypted
+  xRefreshToken   String?  // Encrypted
+  expiresAt       DateTime
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+}
+
+// Future: Add models for contracts, messages, gigs, etc.
+model Contract {
+  id              String   @id @default(uuid())
+  builderId       String
+  hirerId         String
+  title           String
+  description     String
+  budget          Int
+  status          String   // "PENDING", "ACTIVE", "COMPLETED", "CANCELLED"
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([builderId])
+  @@index([hirerId])
+}

@@ -1,0 +1,235 @@
+:root {
+  --bg: #050807;
+  --surface: #101815;
+  --surface-2: #18231e;
+  --text: #e8f0ec;
+  --muted: #98afa4;
+  --line: #2a3a33;
+  --accent: #19f58a;
+  --accent-2: #f5c542;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Menlo, Consolas, Monaco, monospace;
+  color: var(--text);
+  background: radial-gradient(circle at top right, #10251c 0%, var(--bg) 48%);
+  min-height: 100vh;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.18;
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 0.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  margin: 0;
+  color: var(--accent);
+  letter-spacing: 0.18em;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+.role-switch {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: #06150e;
+  border-color: var(--accent);
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(24, 35, 30, 0.7), rgba(10, 15, 13, 0.9));
+  padding: 1rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.panel-head h2 {
+  margin: 0 0 0.4rem;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.panel-head p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 0.8rem;
+}
+
+.card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.company {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.pill {
+  border: 1px solid var(--accent-2);
+  color: var(--accent-2);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.45rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.metric {
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.45rem;
+  background: var(--surface-2);
+}
+
+.apply-btn,
+.contract-form button {
+  margin-top: auto;
+  font: inherit;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0.5rem 0.6rem;
+}
+
+.apply-btn:hover,
+.contract-form button:hover {
+  background: var(--accent);
+  color: #04120b;
+}
+
+.contract-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.contract-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.contract-form input,
+.contract-form select,
+.contract-form textarea {
+  width: 100%;
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.55rem 0.6rem;
+}
+
+.contract-form textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+.span-2 {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contract-form {
+    grid-template-columns: 1fr;
+  }
+
+  .span-2 {
+    grid-column: auto;
+  }
+}
+
