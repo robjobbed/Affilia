@@ -8,82 +8,112 @@
   </head>
   <body>
     <div class="bg-grid" aria-hidden="true"></div>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Affiliate Network MVP</p>
+
+    <section id="authGate" class="auth-gate">
+      <div class="auth-card">
+        <p class="eyebrow">Affiliate Network Access</p>
         <h1>AFFILIA</h1>
-      </div>
-      <div class="role-switch" role="tablist" aria-label="Role switch">
-        <button id="affiliateTab" class="tab active" role="tab" aria-selected="true">Affiliate View</button>
-        <button id="companyTab" class="tab" role="tab" aria-selected="false">Company View</button>
-      </div>
-    </header>
+        <p class="auth-copy">Log in with a social account to access campaign contracts.</p>
 
-    <main>
-      <section id="affiliatePanel" class="panel">
-        <div class="panel-head">
-          <h2>Open Campaign Contracts</h2>
-          <p>Browse company contracts and apply as an affiliate partner.</p>
-        </div>
-        <div id="campaignList" class="cards"></div>
-      </section>
-
-      <section id="companyPanel" class="panel hidden">
-        <div class="panel-head">
-          <h2>Post a Campaign Contract</h2>
-          <p>Create terms affiliates can apply to immediately.</p>
+        <div id="authProviderList" class="auth-provider-list">
+          <button class="auth-btn" data-provider="x">Continue with X</button>
+          <button class="auth-btn" data-provider="instagram">Continue with Instagram</button>
+          <button class="auth-btn" data-provider="facebook">Continue with Facebook</button>
+          <button class="auth-btn" data-provider="tiktok">Continue with TikTok</button>
         </div>
 
-        <form id="contractForm" class="contract-form">
-          <label>
-            Contract title
-            <input name="title" required placeholder="e.g., DTC Wellness CPA Program" />
-          </label>
-          <label>
-            Channel
-            <select name="category" required>
-              <option>CONTENT</option>
-              <option>INFLUENCERS</option>
-              <option>PAID SOCIAL</option>
-              <option>EMAIL</option>
-              <option>SEO</option>
-              <option>COUPON</option>
-              <option>COMMUNITIES</option>
-              <option>OTHER</option>
-            </select>
-          </label>
-          <label>
-            Commission model
-            <select name="commissionType" required>
-              <option>CPA</option>
-              <option>REV SHARE</option>
-              <option>HYBRID</option>
-            </select>
-          </label>
-          <label>
-            Commission value
-            <input name="commissionValue" type="number" required min="1" step="0.01" placeholder="35" />
-          </label>
-          <label>
-            Cookie window (days)
-            <input name="cookieWindowDays" type="number" required min="1" placeholder="30" />
-          </label>
-          <label>
-            Max monthly payout
-            <input name="monthlyPayoutCap" type="number" required min="1" placeholder="10000" />
-          </label>
-          <label class="span-2">
-            Target region
-            <input name="targetRegion" required placeholder="US / UK / AU" />
-          </label>
-          <label class="span-2">
-            Contract description
-            <textarea name="description" required placeholder="Describe your product, terms, and ideal affiliate profile."></textarea>
-          </label>
-          <button type="submit">Publish Contract</button>
-        </form>
-      </section>
-    </main>
+        <p id="authMessage" class="auth-message"></p>
+      </div>
+    </section>
+
+    <div id="appShell" class="hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Affiliate Network MVP</p>
+          <h1>AFFILIA</h1>
+        </div>
+
+        <div id="sessionChip" class="session-chip hidden">
+          <img id="sessionAvatar" class="session-avatar hidden" alt="Profile avatar" />
+          <div>
+            <p id="sessionName" class="session-name"></p>
+            <p id="sessionProvider" class="session-provider"></p>
+          </div>
+          <button id="logoutBtn" class="session-logout">Log out</button>
+        </div>
+
+        <div class="role-switch" role="tablist" aria-label="Role switch">
+          <button id="affiliateTab" class="tab active" role="tab" aria-selected="true">Affiliate View</button>
+          <button id="companyTab" class="tab" role="tab" aria-selected="false">Company View</button>
+        </div>
+      </header>
+
+      <main>
+        <section id="affiliatePanel" class="panel">
+          <div class="panel-head">
+            <h2>Open Campaign Contracts</h2>
+            <p>Browse company contracts and apply as an affiliate partner.</p>
+          </div>
+          <div id="campaignList" class="cards"></div>
+        </section>
+
+        <section id="companyPanel" class="panel hidden">
+          <div class="panel-head">
+            <h2>Post a Campaign Contract</h2>
+            <p>Create terms affiliates can apply to immediately.</p>
+          </div>
+
+          <form id="contractForm" class="contract-form">
+            <label>
+              Contract title
+              <input name="title" required placeholder="e.g., DTC Wellness CPA Program" />
+            </label>
+            <label>
+              Channel
+              <select name="category" required>
+                <option>CONTENT</option>
+                <option>INFLUENCERS</option>
+                <option>PAID SOCIAL</option>
+                <option>EMAIL</option>
+                <option>SEO</option>
+                <option>COUPON</option>
+                <option>COMMUNITIES</option>
+                <option>OTHER</option>
+              </select>
+            </label>
+            <label>
+              Commission model
+              <select name="commissionType" required>
+                <option>CPA</option>
+                <option>REV SHARE</option>
+                <option>HYBRID</option>
+              </select>
+            </label>
+            <label>
+              Commission value
+              <input name="commissionValue" type="number" required min="1" step="0.01" placeholder="35" />
+            </label>
+            <label>
+              Cookie window (days)
+              <input name="cookieWindowDays" type="number" required min="1" placeholder="30" />
+            </label>
+            <label>
+              Max monthly payout
+              <input name="monthlyPayoutCap" type="number" required min="1" placeholder="10000" />
+            </label>
+            <label class="span-2">
+              Target region
+              <input name="targetRegion" required placeholder="US / UK / AU" />
+            </label>
+            <label class="span-2">
+              Contract description
+              <textarea name="description" required placeholder="Describe your product, terms, and ideal affiliate profile."></textarea>
+            </label>
+            <button type="submit">Publish Contract</button>
+          </form>
+        </section>
+      </main>
+    </div>
 
     <template id="cardTemplate">
       <article class="card">
@@ -105,4 +135,3 @@
     <script src="./app.js"></script>
   </body>
 </html>
-

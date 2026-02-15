@@ -6,6 +6,23 @@ const campaignList = document.getElementById("campaignList");
 const contractForm = document.getElementById("contractForm");
 const cardTemplate = document.getElementById("cardTemplate");
 
+const authGate = document.getElementById("authGate");
+const appShell = document.getElementById("appShell");
+const authMessage = document.getElementById("authMessage");
+const authButtons = document.querySelectorAll(".auth-btn");
+const sessionChip = document.getElementById("sessionChip");
+const sessionName = document.getElementById("sessionName");
+const sessionProvider = document.getElementById("sessionProvider");
+const sessionAvatar = document.getElementById("sessionAvatar");
+const logoutBtn = document.getElementById("logoutBtn");
+
+const providerLabels = {
+  x: "X",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  tiktok: "TikTok"
+};
+
 const contracts = [
   {
     companyName: "NeonCart",
@@ -30,6 +47,114 @@ const contracts = [
     monthlyPayoutCap: 12000
   }
 ];
+
+function setAuthMessage(message, isError = false) {
+  authMessage.textContent = message || "";
+  authMessage.classList.toggle("error", Boolean(isError));
+}
+
+function cleanAuthQueryParams() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("auth") || url.searchParams.has("auth_error")) {
+    url.searchParams.delete("auth");
+    url.searchParams.delete("auth_error");
+    window.history.replaceState({}, "", url.toString());
+  }
+}
+
+function getQueryStatus() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    auth: params.get("auth"),
+    authError: params.get("auth_error")
+  };
+}
+
+async function requestJson(url, options = {}) {
+  const response = await fetch(url, {
+    credentials: "include",
+    ...options
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || data.message || "Request failed");
+  }
+
+  return data;
+}
+
+async function loadProviderStatus() {
+  try {
+    const data = await requestJson("/api/auth/providers");
+    const providers = data.providers || [];
+
+    providers.forEach((provider) => {
+      const button = document.querySelector(`.auth-btn[data-provider="${provider.id}"]`);
+      if (!button) return;
+
+      button.disabled = !provider.enabled;
+      if (!provider.enabled) {
+        button.classList.add("disabled");
+        button.title = provider.reason || `${provider.label} login is not configured`;
+      } else {
+        button.classList.remove("disabled");
+        button.title = "";
+      }
+    });
+  } catch {
+    setAuthMessage("Unable to load provider config. Try again.", true);
+  }
+}
+
+function showAuthenticatedApp(user) {
+  authGate.classList.add("hidden");
+  appShell.classList.remove("hidden");
+
+  if (user) {
+    sessionChip.classList.remove("hidden");
+    sessionName.textContent = user.displayName || user.username || "Logged in";
+    sessionProvider.textContent = `via ${providerLabels[user.provider] || user.provider}`;
+
+    if (user.avatarUrl) {
+      sessionAvatar.src = user.avatarUrl;
+      sessionAvatar.classList.remove("hidden");
+    } else {
+      sessionAvatar.classList.add("hidden");
+      sessionAvatar.removeAttribute("src");
+    }
+  }
+}
+
+function showLoginGate() {
+  appShell.classList.add("hidden");
+  authGate.classList.remove("hidden");
+  sessionChip.classList.add("hidden");
+}
+
+async function checkSession() {
+  try {
+    const data = await requestJson("/api/auth/session");
+    return data;
+  } catch {
+    return { authenticated: false, user: null };
+  }
+}
+
+async function logout() {
+  try {
+    await requestJson("/api/auth/logout", { method: "POST" });
+  } catch {
+    // No-op on logout errors
+  }
+  showLoginGate();
+  setAuthMessage("Logged out.", false);
+}
+
+function goToProviderAuth(provider) {
+  window.location.href = `/api/auth/start?provider=${encodeURIComponent(provider)}`;
+}
 
 const commissionText = (contract) => {
   if (contract.commissionType === "CPA") {
@@ -96,5 +221,34 @@ contractForm.addEventListener("submit", (event) => {
   setPanel("affiliate");
 });
 
-renderContracts();
+authButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    if (button.disabled) return;
+    goToProviderAuth(button.dataset.provider);
+  });
+});
 
+logoutBtn.addEventListener("click", logout);
+
+async function init() {
+  renderContracts();
+  await loadProviderStatus();
+
+  const { auth, authError } = getQueryStatus();
+  if (authError) {
+    setAuthMessage(decodeURIComponent(authError), true);
+  } else if (auth === "success") {
+    setAuthMessage("Login successful.", false);
+  }
+
+  const session = await checkSession();
+  if (session.authenticated) {
+    showAuthenticatedApp(session.user);
+  } else {
+    showLoginGate();
+  }
+
+  cleanAuthQueryParams();
+}
+
+init();

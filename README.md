@@ -32,6 +32,38 @@ Affiliate network marketplace platform (AWIN/Impact/CJ-style concept) with:
 2. Use **Affiliate View** to browse contracts.
 3. Use **Company View** to publish a contract.
 
+## Social Login (Web)
+
+The web app now includes OAuth login buttons for:
+- X
+- Instagram
+- Facebook
+- TikTok
+
+### Serverless Auth Routes
+
+Implemented under `web/api/auth/*` for Vercel:
+- `GET /api/auth/providers` provider config status
+- `GET /api/auth/start?provider=x|instagram|facebook|tiktok` OAuth redirect
+- `GET /api/auth/callback/{provider}` OAuth callback
+- `GET /api/auth/session` current session
+- `POST /api/auth/logout` clear session
+
+### Required Environment Variables (Vercel)
+
+Set these in your Vercel project:
+- `AFFILIA_SESSION_SECRET`
+- `X_CLIENT_ID`, `X_CLIENT_SECRET`, optional `X_REDIRECT_URI`
+- `IG_CLIENT_ID`, `IG_CLIENT_SECRET`, optional `IG_REDIRECT_URI`
+- `FB_CLIENT_ID`, `FB_CLIENT_SECRET`, optional `FB_REDIRECT_URI`
+- `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`, optional `TIKTOK_REDIRECT_URI`
+
+If redirect URI vars are omitted, defaults are:
+- `https://<your-domain>/api/auth/callback/x`
+- `https://<your-domain>/api/auth/callback/instagram`
+- `https://<your-domain>/api/auth/callback/facebook`
+- `https://<your-domain>/api/auth/callback/tiktok`
+
 ## BMAD Method Integration
 
 BMAD is now installed in this project.
